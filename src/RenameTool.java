@@ -13,19 +13,15 @@ public class RenameTool {
     public static Predicate<Path> directFilter = path -> path.toString().endsWith(".java") | path.toString().endsWith(".kt");
     public static Predicate<Path> reversedFilter = path -> path.toString().endsWith(".2019");
 
-    private static void printMessage(boolean renameTo, Path oldPath, Path newPath) {
-        if (renameTo) {
-            System.out.println(newPath);
-        } else {
-            System.out.println("Can't rename " + oldPath);
-        }
-    }
-
     public static void directRenameFunc(Path path) {
         String newName = path.toString();
         boolean renameTo = path.toFile().renameTo(new File(newName + ".2019"));
         Path newPath = Paths.get(newName + ".2019");
-        printMessage(renameTo, path, newPath);
+        if (renameTo) {
+            System.out.println(newPath);
+        } else {
+            System.out.println("Can't rename " + path);
+        }
     }
 
     private static void reversedRenameFunc(Path path) {
@@ -49,11 +45,11 @@ public class RenameTool {
 
     public static void main(String[] args) {
         if (args == null || args.length < 1) {
-            System.out.println("Need starting directory for renaming process");
+            System.err.println("Need starting directory for renaming process");
         } else if (args[0] == null) {
-            System.out.println("Starting directory can't be null");
+            System.err.println("Starting directory can't be null");
         } else if (!Paths.get(args[0]).toFile().isDirectory()) {
-            System.out.println("Need directory to start");
+            System.err.println("Need directory to start");
         } else if (args.length == 1) {
             rename(args[0], directFilter, RenameTool::directRenameFunc);
         } else {
