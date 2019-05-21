@@ -3,14 +3,21 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 public class RenameTool {
 
+    public static Set<String> endings = new HashSet<>() {{
+        add(".java");
+        add(".kt");
+    }};
     public static Predicate<Path> commonFilter = path -> path.toFile().isFile();
-    public static Predicate<Path> directFilter = path -> path.toString().endsWith(".java") | path.toString().endsWith(".kt");
+    public static Predicate<Path> directFilter = path -> endings.stream().anyMatch(path.toString()::endsWith);
     public static Predicate<Path> reversedFilter = path -> path.toString().endsWith(".2019");
 
     public static void directRenameFunc(Path path) {
